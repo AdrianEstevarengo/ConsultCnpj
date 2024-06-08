@@ -1,0 +1,39 @@
+﻿@model ConsultCnpj.Models.ErrorViewModel 
+@{
+    ViewData["Title"] = "Consultar CNPJ";
+}
+
+<h1>Consultar CNPJ</h1>
+
+@using (Html.BeginForm("ObterCertidaoPrimeiroSite", "ConsultarCnpj", FormMethod.Post, new { id = "formCnpj" }))
+{
+    <label for="cnpj">CNPJ:</label>
+    <input type="text" id="cnpj" name="cnpj" required>
+    <button type="submit">Consultar</button>
+}
+
+<div id="certidao"></div>
+
+@section Scripts {
+    <script>
+        // Função para enviar o CNPJ para a action ObterCertidaoPrimeiroSite
+        document.getElementById("formCnpj").addEventListener("submit", function (event) {
+            event.preventDefault();
+            var cnpj = document.getElementById("cnpj").value;
+
+            fetch("/ConsultarCnpj/ObterCertidaoPrimeiroSite", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "cnpj=" + encodeURIComponent(cnpj)
+            })
+                .then(response => response.text())
+                .then(data => {
+                    // Atualiza a div com a resposta da action
+                    document.getElementById("certidao").innerHTML = data;
+                })
+                .catch(error => console.error("Erro:", error));
+        });
+    </script>
+}
