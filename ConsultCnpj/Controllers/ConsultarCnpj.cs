@@ -26,13 +26,13 @@ namespace ConsultCnpj.Controllers
                     // Interação com o primeiro site
                     ObterCertidaoPrimeiroSite(driver, cnpj);
 
-                    // Após obter a certidão, você pode redirecionar para uma view que a exiba ou fazer algo mais com ela
+                    ObterCertidaoSegundoSite(driver, cnpj);
+
                     return RedirectToAction("Index");
                 }
             }
             catch (Exception e)
             {
-                // Em caso de erro, você pode redirecionar para uma página de erro ou retornar uma mensagem de erro para a view
                 return Content("Erro: " + e.Message);
             }
         }
@@ -55,6 +55,23 @@ namespace ConsultCnpj.Controllers
             var botaoEmitirCertidao = driver.FindElement(By.CssSelector(".btn.btn.btn-labeled.btn-primary.botoes-alinhados.btn-secondary"));
             botaoEmitirCertidao.Click();
             Thread.Sleep(4000);
+        }
+
+        private void ObterCertidaoSegundoSite(IWebDriver driver, string cnpj)
+        {
+            // Exemplo de navegação e interação com o segundo site
+            driver.Navigate().GoToUrl("https://certidoes-apf.apps.tcu.gov.br");
+
+            var inputCnpj = driver.FindElement(By.Id("numero-cnpj"));
+            inputCnpj.SendKeys(cnpj);
+
+            var submit = driver.FindElement(By.Id("btn-emitir"));
+            submit.Click();
+
+            Thread.Sleep(10000);
+
+            var botaoEmitirCertidao = driver.FindElement(By.Id("btn-emitir"));
+            botaoEmitirCertidao.Click();
         }
     }
 }
